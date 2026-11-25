@@ -111,7 +111,11 @@ def get_config():
 
 # defineix aquí totes les funcions addicionals que calguin per a la configuració
 # mantén-ho net, clar i ben estructurat
-
+def ask_yes_no():
+def read_int_in_range():
+def read_int_in_range_w_default():
+def change_colors():
+def read_color():
 # ==============================================
 # Part 2: Lògica del joc (es crida des del bucle principal)
 
