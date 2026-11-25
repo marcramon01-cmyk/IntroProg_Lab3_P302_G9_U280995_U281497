@@ -111,8 +111,29 @@ def get_config():
 
 # defineix aquí totes les funcions addicionals que calguin per a la configuració
 # mantén-ho net, clar i ben estructurat
-def ask_yes_no():
+def ask_yes_no(prompt: str) -> bool:
+    while True:
+        try:
+            pregunta_si_no = input(f"{prompt} (y/yes/n/no): ") # Demana un input a l'usuari i li diu les respostes permeses
+
+            if pregunta_si_no.lower() in ("yes", "y"): # "lower" ho converteix a minúscula perquè ho pugui llegir el programa correctament, sense importar minúscules o majúscules
+                return True
+            elif pregunta_si_no.lower() in ("no", "n"):
+                return False
+            # Comprovació errors 
+            else:
+                print("Si us plau, contesta y/n.")
+        except  ValueError:
+            print("Si us plau, contesta y/n.")
+
 def read_int_in_range():
+    if ask_yes_no("Vols canviar la configuració inicial?") ==True:
+        while True:
+            try:
+                
+           
+                    
+                
 def read_int_in_range_w_default():
 def change_colors():
 def read_color():
