@@ -107,6 +107,11 @@ def get_config():
     """
 
     # PENDENT: afegeix tot el codi necessari
+    if ask_yes_no("Vols canviar la configuració inicial?") ==True:
+        read_int_in_range("
+
+    else:
+        return BG, BOARD_BG, GRID_COLOR, EMPTY_COLOR, WHITE, RED, YELLOW
     return None
 
 # defineix aquí totes les funcions addicionals que calguin per a la configuració
@@ -126,10 +131,21 @@ def ask_yes_no(prompt: str) -> bool:
         except  ValueError:
             print("Si us plau, contesta y/n.")
 
-def read_int_in_range():
-    if ask_yes_no("Vols canviar la configuració inicial?") ==True:
-        while True:
+def read_int_in_range(prompt: str, low: int, high: int) -> int:
+        while True: # Bucle while perquè s'executi fins que retorni alguna cosa
             try:
+                valor = int(input(f"{prompt} ({low}-{high}): ")) # Pregunta un input enter, avisant quin és l'interval permès
+    
+                if low <= valor <= high: # Comprova si l'input està dins de l'interval i el retorna
+                    return valor
+                else: # Si no està dins l'interval torna a demanar
+                    print(f"Si us plau, introdueix un valor entre {low} i {high}")
+            except ValueError: # Si l'input no és un nombre enter torna a demanar
+                print("La entrada no és vàlida. Si us plau, introdueix un nombre enter.")
+        return valor
+    else:
+        return 
+        
                 
            
                     
