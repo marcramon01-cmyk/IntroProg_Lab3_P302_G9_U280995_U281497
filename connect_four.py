@@ -107,11 +107,11 @@ def get_config():
     """
 
     # PENDENT: afegeix tot el codi necessari
-    if ask_yes_no("Vols canviar la configuració inicial?") ==True:
-        read_int_in_range("
+   # if ask_yes_no("Vols canviar la configuració inicial?") ==True:
+       # read_int_in_range("
 
-    else:
-        return BG, BOARD_BG, GRID_COLOR, EMPTY_COLOR, WHITE, RED, YELLOW
+    #else:
+        #return BG, BOARD_BG, GRID_COLOR, EMPTY_COLOR, WHITE, RED, YELLOW
     return None
 
 # defineix aquí totes les funcions addicionals que calguin per a la configuració
@@ -132,27 +132,51 @@ def ask_yes_no(prompt: str) -> bool:
             print("Si us plau, contesta y/n.")
 
 def read_int_in_range(prompt: str, low: int, high: int) -> int:
-        while True: # Bucle while perquè s'executi fins que retorni alguna cosa
-            try:
-                valor = int(input(f"{prompt} ({low}-{high}): ")) # Pregunta un input enter, avisant quin és l'interval permès
-    
-                if low <= valor <= high: # Comprova si l'input està dins de l'interval i el retorna
-                    return valor
-                else: # Si no està dins l'interval torna a demanar
-                    print(f"Si us plau, introdueix un valor entre {low} i {high}")
-            except ValueError: # Si l'input no és un nombre enter torna a demanar
-                print("La entrada no és vàlida. Si us plau, introdueix un nombre enter.")
-        return valor
-    else:
-        return 
+    while True: # Bucle while perquè s'executi fins que retorni alguna cosa
+        try:
+            valor = int(input(f"{prompt} ({low}-{high}): ")) # Pregunta un input enter, avisant quin és l'interval permès
+
+            if low <= valor <= high: # Comprova si l'input està dins de l'interval i el retorna
+                return valor
+            else: # Si no està dins l'interval torna a demanar
+                print(f"Si us plau, introdueix un valor entre {low} i {high}")
+        except ValueError: # Si l'input no és un nombre enter torna a demanar
+            print("La entrada no és vàlida. Si us plau, introdueix un nombre enter.")
         
                 
            
                     
                 
-def read_int_in_range_w_default():
-def change_colors():
-def read_color():
+def read_int_in_range_w_default(prompt: str, low: int, high: int, default_val: int) -> int:
+        while True: # Bucle que no s'atura fins que retorni alguna cosa (que es compleixi alguna condició)
+            try:
+                entrada = input(f"{prompt} ({low}-{high}) (ENTER per assignar el predeterminat {default_val}): ") # canviem a entrada perquè ara necessitem una string i no un nombre enter.
+
+                if entrada == "": # si l'introduït es buit
+                    return default_val
+                valor = int(entrada) # intentem convertir-lo en un enter, només si no es buit
+                if low <= valor <= high: # si el valor està dins dels límits és vàlid
+                    return valor
+                # Comprovació d'inputs incorrectes
+                else:
+                    print(f"Si us plau, introdueix entre {low} i {high}")
+            except ValueError:
+                print("La entrada no és vàlida. Si us plau, introdueix un nombre enter.")
+def change_colors() -> tuple[tuple[int, int, int], tuple[int, int, int]]:
+    if ask_yes_no("Vols canviar els colors?") == False: # Si no s'obre el menú, s'assigna negre i blanc
+        return BLACK,WHITE
+
+    else: # crida la funció read_color per definir els nous colors; després els retorna
+        background_color = read_color("fondo")
+        foreground_color = read_color("elements")
+    return background_color,foreground_color
+
+def read_color(prompt: str) -> tuple[int, int, int]:
+    red = read_int_in_range_w_default(f"Introdueix el primer component de color de {prompt}",0,255,0)
+    green = read_int_in_range_w_default(f"Introdueix el segon component de color {prompt}",0,255,0)
+    blue = read_int_in_range_w_default(f"Introdueix el tercer component de color de {prompt}",0,255,0)
+    return red,green,blue
+
 # ==============================================
 # Part 2: Lògica del joc (es crida des del bucle principal)
 
