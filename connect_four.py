@@ -107,12 +107,24 @@ def get_config():
     """
 
     # PENDENT: afegeix tot el codi necessari
-   # if ask_yes_no("Vols canviar la configuració inicial?") ==True:
-       # read_int_in_range("
 
-    #else:
-        #return BG, BOARD_BG, GRID_COLOR, EMPTY_COLOR, WHITE, RED, YELLOW
-    return None
+    # Mode: 2 jugadors o contra la màquina
+    mode = read_int_in_range_w_default("Tria el mode de joc: 1 per 2 jugadors, 2 per jugar contra la màquina",1,2,1)
+    if mode == 1:
+        vs_machine = False
+    else:
+        vs_machine = True
+    
+    # Si juga contra la màquina, tria dificultat
+    smart_ai = False
+    if vs_machine == True:
+        ai_level = read_int_in_range_w_default("Nivell de la màquina: 1 per nivell aleatori, 2 per nivell intel·ligent",1,2,1)
+        if ai_level == 2:
+            smart_ai = True
+    default_p1 , default_p2 = RED,YELLOW    
+    color_p1 , color_p2 = change_colors(default_p1, default_p2)
+
+    return vs_machine, smart_ai , color_p1 , color_p2
 
 # defineix aquí totes les funcions addicionals que calguin per a la configuració
 # mantén-ho net, clar i ben estructurat
@@ -129,47 +141,65 @@ def ask_yes_no(prompt: str) -> bool:
             else:
                 print("Si us plau, contesta y/n.")
         except  ValueError:
-            print("Si us plau, contesta y/n.")
-
-def read_int_in_range(prompt: str, low: int, high: int) -> int:
-    while True: # Bucle while perquè s'executi fins que retorni alguna cosa
-        try:
-            valor = int(input(f"{prompt} ({low}-{high}): ")) # Pregunta un input enter, avisant quin és l'interval permès
-
-            if low <= valor <= high: # Comprova si l'input està dins de l'interval i el retorna
-                return valor
-            else: # Si no està dins l'interval torna a demanar
-                print(f"Si us plau, introdueix un valor entre {low} i {high}")
-        except ValueError: # Si l'input no és un nombre enter torna a demanar
-            print("La entrada no és vàlida. Si us plau, introdueix un nombre enter.")
-        
-                
-           
-                    
+            print("Si us plau, contesta y/n.")                 
                 
 def read_int_in_range_w_default(prompt: str, low: int, high: int, default_val: int) -> int:
-        while True: # Bucle que no s'atura fins que retorni alguna cosa (que es compleixi alguna condició)
-            try:
-                entrada = input(f"{prompt} ({low}-{high}) (ENTER per assignar el predeterminat {default_val}): ") # canviem a entrada perquè ara necessitem una string i no un nombre enter.
+    """ Advanced/alternate more user-friendly version of read_int_in_range().
+    Works like the basic version, but adds support for a *default value*.
+    You can do it as a substitute, but we recommend you to start with the basic one
 
-                if entrada == "": # si l'introduït es buit
-                    return default_val
-                valor = int(entrada) # intentem convertir-lo en un enter, només si no es buit
-                if low <= valor <= high: # si el valor està dins dels límits és vàlid
-                    return valor
-                # Comprovació d'inputs incorrectes
-                else:
-                    print(f"Si us plau, introdueix entre {low} i {high}")
-            except ValueError:
-                print("La entrada no és vàlida. Si us plau, introdueix un nombre enter.")
-def change_colors() -> tuple[tuple[int, int, int], tuple[int, int, int]]:
-    if ask_yes_no("Vols canviar els colors?") == False: # Si no s'obre el menú, s'assigna negre i blanc
-        return BLACK,WHITE
+    If the user simply presses ENTER without typing anything,
+    the function immediately returns `default_val` **without asking again**.
 
-    else: # crida la funció read_color per definir els nous colors; després els retorna
-        background_color = read_color("fondo")
-        foreground_color = read_color("elements")
-    return background_color,foreground_color
+    Behavior summary:
+      - Ask the user for an integer in the range [low, high].
+      - If the user enters a valid number, return it.
+      - If the user presses ENTER directly, return `default_val`.
+      - If the user enters text or an out-of-range number, print an error
+        message and repeat the question.
+
+    Parameters
+    ----------
+    prompt : str
+        Message shown to the user before input.
+    low : int
+        Minimum allowed integer value.
+    high : int
+        Maximum allowed integer value.
+    default_val : int
+        Value returned when the user presses ENTER without typing anything.
+        It should be inside the range [low, high].
+        Take the value from the CONSTANT defined at the beginning
+
+    Returns
+    -------
+    int
+        The integer entered by the user, or `default_val` if the user pressed ENTER.
+    """
+    while True: # Bucle que no s'atura fins que retorni alguna cosa (que es compleixi alguna condició)
+        try:
+            entrada = input(f"{prompt} ({low}-{high}) (ENTER per assignar el predeterminat {default_val}): ") # canviem a entrada perquè ara necessitem una string i no un nombre enter.
+
+            if entrada == "": # si l'introduït es buit
+                return default_val
+            valor = int(entrada) # intentem convertir-lo en un enter, només si no es buit
+            if low <= valor <= high: # si el valor està dins dels límits és vàlid
+                return valor
+            # Comprovació d'inputs incorrectes
+            else:
+                print(f"Si us plau, introdueix entre {low} i {high}")
+        except ValueError:
+            print("La entrada no és vàlida. Si us plau, introdueix un nombre enter.")
+
+def change_colors(default_p1: tuple, default_p2: tuple) -> tuple[tuple[int, int, int], tuple[int, int, int]]:
+    """Pregunta si vol canviar els colors de les fitxes dels dos jugadors."""
+    if ask_yes_no("Vols canviar els colors?") == False: # Si no s'obre el menú, s'assigna els valors predeterminats default_p1 i default_p2
+        return default_p1, default_p2
+
+    else: 
+        color_p1 = read_color("Jugador 1")
+        color_p2 = read_color("Jugador 2 / Màquina")
+    return color_p1, color_p2
 
 def read_color(prompt: str) -> tuple[int, int, int]:
     red = read_int_in_range_w_default(f"Introdueix el primer component de color de {prompt}",0,255,0)
@@ -289,7 +319,8 @@ def main():
     # ..... 
     # fes qualsevol configuració necessària, entrada d'usuari, etc.
     # pots preguntar opcions com colors, 2 o 1 jugadors, etc.
-    get_config() # actualment no fa res
+    
+    vs_machine, smart_ai, color_p1 , color_p2 = get_config() 
                 
     # inici de pygame — No cal tocar res aquí
     pygame.init()
